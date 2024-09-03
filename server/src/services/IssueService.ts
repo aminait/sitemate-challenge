@@ -1,7 +1,5 @@
 import { IssueModel, IIssue } from 'src/models';
 
-// TODO add validation
-
 export class IssueService {
   public async createIssue(title: string, description: string): Promise<IIssue> {
     const issue = new IssueModel({ title, description });

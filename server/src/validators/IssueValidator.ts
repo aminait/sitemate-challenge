@@ -8,3 +8,8 @@ export const createIssueSchema = Joi.object({
     'string.empty': 'Description is required',
   }),
 });
+
+export const updateIssueSchema = Joi.object({
+  title: Joi.string().optional(),
+  description: Joi.string().optional(),
+});

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { IssueService } from 'src/services';
-import { createIssueSchema } from 'src/validators';
+import { updateIssueSchema, createIssueSchema } from 'src/validators';
 import { ApiError, ApiSuccess } from 'src/utils';
 import Logger from 'src/utils/Logger';
 
@@ -36,7 +36,6 @@ class IssueController {
 
   public readIssue = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // TODO handle 404 case
       const id = req.params.id;
       const issue = await this.issueService.readIssue(id);
 
@@ -52,7 +51,25 @@ class IssueController {
 
   public updateIssue = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      res.json();
+      const id = req.params.id;
+      const { error, value } = updateIssueSchema.validate(req.body);
+
+      if (error) {
+        const validationErrors = error.details.map((err) => ({
+          field: err.path.join('.'),
+          message: err.message,
+        }));
+
+        throw new ApiError(400, 'Validation Error', validationErrors);
+      }
+
+      const updatedIssue = await this.issueService.updateIssue(id, value);
+
+      if (!updatedIssue) {
+        throw new ApiError(404, 'Issue not found');
+      }
+
+      res.status(200).json(new ApiSuccess(updatedIssue, 'Issue updated'));
     } catch (err) {
       next(err);
     }
@@ -60,7 +77,14 @@ class IssueController {
 
   public deleteIssue = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      res.json();
+      const id = req.params.id;
+      const deletedIssue = await this.issueService.deleteIssue(id);
+
+      if (!deletedIssue) {
+        throw new ApiError(404, 'Issue not found');
+      }
+
+      res.status(200).json(new ApiSuccess(null, 'Issue deleted.'));
     } catch (err) {
       next(err);
     }
