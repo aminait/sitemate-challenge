@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "*": ["*"]
+    },
+    "target": "ES2020",
+    "module": "CommonJS",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "outDir": "../dist", // Ensure `dist` is outside of `src`
+    "rootDir": ".", // Root directory of input files (src)
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "declaration": true,
+    "sourceMap": true
+  },
+  "include": ["./src/**/*.ts"], // Include all TypeScript files within `src/`
+  "exclude": ["node_modules", "dist"]
+}
