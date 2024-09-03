@@ -36,22 +36,15 @@ class IssueController {
 
   public readIssue = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { error, value } = createIssueSchema.validate(req.body, { abortEarly: false });
+      // TODO handle 404 case
+      const id = req.params.id;
+      const issue = await this.issueService.readIssue(id);
 
-      if (error) {
-        const validationErrors = error.details.map((err) => ({
-          field: err.path.join('.'),
-          message: err.message,
-        }));
-
-        throw new ApiError(400, 'Validation Error', validationErrors);
+      if (!issue) {
+        throw new ApiError(404, 'Issue not found');
       }
 
-      // print the object
-      Logger.info(value);
-
-      const issue = await this.issueService.createIssue(value.title, value.description);
-      res.status(201).json(new ApiSuccess(issue, 'Issue created successfully'));
+      res.status(200).json(new ApiSuccess(issue));
     } catch (err) {
       next(err);
     }
@@ -59,22 +52,7 @@ class IssueController {
 
   public updateIssue = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { error, value } = createIssueSchema.validate(req.body, { abortEarly: false });
-
-      if (error) {
-        const validationErrors = error.details.map((err) => ({
-          field: err.path.join('.'),
-          message: err.message,
-        }));
-
-        throw new ApiError(400, 'Validation Error', validationErrors);
-      }
-
-      // print the object
-      Logger.info(value);
-
-      const issue = await this.issueService.createIssue(value.title, value.description);
-      res.status(201).json(new ApiSuccess(issue, 'Issue created successfully'));
+      res.json();
     } catch (err) {
       next(err);
     }
@@ -82,22 +60,7 @@ class IssueController {
 
   public deleteIssue = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { error, value } = createIssueSchema.validate(req.body, { abortEarly: false });
-
-      if (error) {
-        const validationErrors = error.details.map((err) => ({
-          field: err.path.join('.'),
-          message: err.message,
-        }));
-
-        throw new ApiError(400, 'Validation Error', validationErrors);
-      }
-
-      // print the object
-      Logger.info(value);
-
-      const issue = await this.issueService.createIssue(value.title, value.description);
-      res.status(201).json(new ApiSuccess(issue, 'Issue created successfully'));
+      res.json();
     } catch (err) {
       next(err);
     }
